@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}{{'Редактирование' if post else 'Новый пост'}}{% endblock %}
+{% block content %}<div class="form-card wide"><h1>{{'Редактирование поста' if post else 'Новый пост'}}</h1>
+<form method="post"><label>Заголовок<input name="title" value="{{post.title if post else ''}}" required></label>
+<label>Категория<select name="category"><option value="">Без категории</option>{% for c in categories %}<option value="{{c.id}}" {% if post and post.category_id==c.id %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select></label>
+<label>Теги <small>(через запятую)</small><input name="tags" value="{{tags if tags is defined else ''}}" placeholder="python, flask, web"></label>
+<label>Текст<textarea class="big" name="body" required>{{post.body if post else ''}}</textarea></label>
+<button>{{'Сохранить' if post else 'Опубликовать'}}</button></form></div>{% endblock %}

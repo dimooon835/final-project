@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block title %}Лента — BlogSpace{% endblock %}
+{% block content %}
+<section class="hero"><h1>Блог-платформа</h1><p>Публикуйте статьи, обсуждайте их и находите интересные материалы.</p></section>
+<form class="filters" method="get">
+<input name="q" value="{{q}}" placeholder="Поиск по статьям...">
+<select name="category"><option value="">Все категории</option>{% for c in categories %}<option value="{{c.id}}" {% if cat|string==c.id|string %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
+<input name="tag" value="{{tag}}" placeholder="Тег">
+<button>Найти</button>{% if q or tag or cat %}<a class="btn secondary" href="{{url_for('index')}}">Сбросить</a>{% endif %}
+</form>
+{% for p in posts %}
+<article class="card"><div class="meta">{{p.category or 'Без категории'}} · {{p.created_at[:16]}} · автор {{p.username}}</div>
+<h2><a href="{{url_for('post',post_id=p.id)}}">{{p.title}}</a></h2>
+<p>{{p.body[:280]}}{{'…' if p.body|length>280 else ''}}</p>
+<div class="stats">❤️ {{p.likes}} · 💬 {{p.comments}}</div></article>
+{% else %}<div class="card"><h2>Ничего не найдено</h2><p>Попробуйте изменить запрос.</p></div>{% endfor %}
+<div class="pagination">
+{% if page>1 %}<a href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page-1}}">← Назад</a>{% endif %}
+<span>Страница {{page}} из {{pages}}</span>
+{% if page<pages %}<a href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page+1}}">Вперёд →</a>{% endif %}
+</div>
+{% endblock %}

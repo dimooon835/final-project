@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}{{post.title}}{% endblock %}{% block content %}
+<article class="card post"><div class="meta">{{post.category or 'Без категории'}} · {{post.created_at[:16]}} · {{post.username}}</div>
+<h1>{{post.title}}</h1><div class="body">{{post.body|e|replace('\n','<br>')|safe}}</div>
+<div class="tags">{% for t in tags %}<a href="{{url_for('index',tag=t.name)}}">#{{t.name}}</a>{% endfor %}</div>
+<div class="actions">
+{% if current_user %}<form method="post" action="{{url_for('like',post_id=post.id)}}"><button class="like {% if liked %}active{% endif %}">❤️ {{post.likes}}</button></form>{% else %}❤️ {{post.likes}}{% endif %}
+{% if current_user and (current_user.id==post.user_id or current_user.role=='admin') %}
+<a class="btn secondary" href="{{url_for('edit_post',post_id=post.id)}}">Редактировать</a>
+<form method="post" action="{{url_for('delete_post',post_id=post.id)}}" onsubmit="return confirm('Удалить пост?')"><button class="danger">Удалить</button></form>{% endif %}
+</div></article>
+<section><h2>Комментарии ({{comments|length}})</h2>
+{% for c in comments %}<div class="comment"><b>{{c.username}}</b><small>{{c.created_at[:16]}}</small><p>{{c.body}}</p></div>{% else %}<p>Комментариев пока нет.</p>{% endfor %}
+{% if current_user %}<form class="comment-form" method="post" action="{{url_for('comment',post_id=post.id)}}"><textarea name="body" placeholder="Ваш комментарий..." required></textarea><button>Отправить</button></form>{% else %}<p><a href="{{url_for('login')}}">Войдите</a>, чтобы оставить комментарий.</p>{% endif %}
+</section>{% endblock %}
