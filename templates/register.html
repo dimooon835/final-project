@@ -1,6 +1,22 @@
-{% extends "base.html" %}{% block title %}Регистрация{% endblock %}{% block content %}
-<div class="form-card"><h1>Регистрация</h1><form method="post">
-<label>Логин<input name="username" minlength="3" required></label>
-<label>Email<input type="email" name="email" required></label>
-<label>Пароль<input type="password" name="password" minlength="6" required></label>
-<button>Создать аккаунт</button></form></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Регистрация — BlogSpace{% endblock %}
+{% block content %}
+<div class="flex min-h-[calc(100vh-190px)] items-center justify-center py-10">
+    <div class="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-7 shadow-[0_20px_60px_rgba(24,24,22,0.06)] sm:p-9">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">BlogSpace</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight">Создать аккаунт</h1>
+        <form method="post" class="mt-7 space-y-4">
+            <label class="block"><span class="mb-1.5 block text-xs font-semibold text-stone-600">Логин</span>
+                <input name="username" minlength="3" required class="h-11 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+            </label>
+            <label class="block"><span class="mb-1.5 block text-xs font-semibold text-stone-600">Email</span>
+                <input type="email" name="email" required class="h-11 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+            </label>
+            <label class="block"><span class="mb-1.5 block text-xs font-semibold text-stone-600">Пароль</span>
+                <input type="password" name="password" minlength="6" required class="h-11 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+            </label>
+            <button class="h-11 w-full rounded-xl bg-stone-900 font-medium text-white hover:bg-stone-700">Создать аккаунт</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
