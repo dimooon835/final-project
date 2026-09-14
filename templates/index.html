@@ -1,21 +1,56 @@
-{% extends "base.html" %}{% block title %}Лента — BlogSpace{% endblock %}
+{% extends "base.html" %}
+{% block title %}Лента — BlogSpace{% endblock %}
 {% block content %}
-<section class="hero"><h1>Блог-платформа</h1><p>Публикуйте статьи, обсуждайте их и находите интересные материалы.</p></section>
-<form class="filters" method="get">
-<input name="q" value="{{q}}" placeholder="Поиск по статьям...">
-<select name="category"><option value="">Все категории</option>{% for c in categories %}<option value="{{c.id}}" {% if cat|string==c.id|string %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
-<input name="tag" value="{{tag}}" placeholder="Тег">
-<button>Найти</button>{% if q or tag or cat %}<a class="btn secondary" href="{{url_for('index')}}">Сбросить</a>{% endif %}
+<section class="py-8 sm:py-12">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">BlogSpace</p>
+    <h1 class="text-3xl font-semibold tracking-tight sm:text-5xl">Идеи, статьи и обсуждения</h1>
+    <p class="mt-3 max-w-2xl text-stone-500">Публикуйте материалы, ставьте лайки и находите интересные статьи.</p>
+</section>
+
+<form method="get" class="mb-6 rounded-2xl border border-stone-200 bg-white p-3 shadow-[0_12px_36px_rgba(24,24,22,0.04)]">
+    <div class="grid gap-2 md:grid-cols-[1fr_180px_160px_auto]">
+        <input name="q" value="{{ q }}" placeholder="Поиск по статьям..."
+               class="h-10 rounded-lg bg-stone-100 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+        <select name="category" class="h-10 rounded-lg bg-stone-100 px-3 outline-none">
+            <option value="">Все категории</option>
+            {% for c in categories %}
+                <option value="{{ c.id }}" {% if cat|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <input name="tag" value="{{ tag }}" placeholder="Тег"
+               class="h-10 rounded-lg bg-stone-100 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+        <button class="h-10 rounded-lg bg-stone-900 px-5 font-medium text-white hover:bg-stone-700">Найти</button>
+    </div>
+    {% if q or tag or cat %}
+        <a href="{{ url_for('index') }}" class="mt-2 inline-block text-xs text-stone-500">Сбросить фильтры</a>
+    {% endif %}
 </form>
+
+<div class="space-y-3">
 {% for p in posts %}
-<article class="card"><div class="meta">{{p.category or 'Без категории'}} · {{p.created_at[:16]}} · автор {{p.username}}</div>
-<h2><a href="{{url_for('post',post_id=p.id)}}">{{p.title}}</a></h2>
-<p>{{p.body[:280]}}{{'…' if p.body|length>280 else ''}}</p>
-<div class="stats">❤️ {{p.likes}} · 💬 {{p.comments}}</div></article>
-{% else %}<div class="card"><h2>Ничего не найдено</h2><p>Попробуйте изменить запрос.</p></div>{% endfor %}
-<div class="pagination">
-{% if page>1 %}<a href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page-1}}">← Назад</a>{% endif %}
-<span>Страница {{page}} из {{pages}}</span>
-{% if page<pages %}<a href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page+1}}">Вперёд →</a>{% endif %}
+<article class="rounded-2xl border border-stone-200 bg-white p-5 shadow-[0_12px_36px_rgba(24,24,22,0.04)] transition hover:-translate-y-0.5 sm:p-6">
+    <div class="text-xs text-stone-400">{{ p.category or 'Без категории' }} · {{ p.created_at[:16] }} · {{ p.username }}</div>
+    <h2 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
+        <a href="{{ url_for('post', post_id=p.id) }}" class="hover:text-stone-500">{{ p.title }}</a>
+    </h2>
+    <p class="mt-2 leading-7 text-stone-600">{{ p.body[:280] }}{{ '…' if p.body|length > 280 else '' }}</p>
+    <div class="mt-4 text-xs text-stone-400">❤️ {{ p.likes }} · 💬 {{ p.comments }}</div>
+</article>
+{% else %}
+<div class="rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
+    <h2 class="font-semibold">Ничего не найдено</h2>
+    <p class="mt-1 text-stone-500">Попробуйте изменить запрос.</p>
+</div>
+{% endfor %}
+</div>
+
+<div class="flex items-center justify-center gap-6 py-8">
+    {% if page > 1 %}
+        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page-1}}">← Назад</a>
+    {% endif %}
+    <span class="text-stone-500">Страница {{ page }} из {{ pages }}</span>
+    {% if page < pages %}
+        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page+1}}">Вперёд →</a>
+    {% endif %}
 </div>
 {% endblock %}

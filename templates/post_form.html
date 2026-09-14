@@ -1,7 +1,38 @@
-{% extends "base.html" %}{% block title %}{{'Редактирование' if post else 'Новый пост'}}{% endblock %}
-{% block content %}<div class="form-card wide"><h1>{{'Редактирование поста' if post else 'Новый пост'}}</h1>
-<form method="post"><label>Заголовок<input name="title" value="{{post.title if post else ''}}" required></label>
-<label>Категория<select name="category"><option value="">Без категории</option>{% for c in categories %}<option value="{{c.id}}" {% if post and post.category_id==c.id %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select></label>
-<label>Теги <small>(через запятую)</small><input name="tags" value="{{tags if tags is defined else ''}}" placeholder="python, flask, web"></label>
-<label>Текст<textarea class="big" name="body" required>{{post.body if post else ''}}</textarea></label>
-<button>{{'Сохранить' if post else 'Опубликовать'}}</button></form></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}{{ 'Редактирование' if post else 'Новый пост' }} — BlogSpace{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl py-6 sm:py-10">
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-[0_16px_50px_rgba(24,24,22,0.05)] sm:p-9">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">Редактор</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight">{{ 'Редактирование поста' if post else 'Новый пост' }}</h1>
+        <form method="post" class="mt-7 space-y-5">
+            <label class="block">
+                <span class="mb-1.5 block text-xs font-semibold text-stone-600">Заголовок</span>
+                <input name="title" value="{{ post.title if post else '' }}" required class="h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+            </label>
+            <div class="grid gap-5 sm:grid-cols-2">
+                <label class="block">
+                    <span class="mb-1.5 block text-xs font-semibold text-stone-600">Категория</span>
+                    <select name="category" class="h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none">
+                        <option value="">Без категории</option>
+                        {% for c in categories %}
+                            <option value="{{ c.id }}" {% if post and post.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label class="block">
+                    <span class="mb-1.5 block text-xs font-semibold text-stone-600">Теги <span class="font-normal text-stone-400">(через запятую)</span></span>
+                    <input name="tags" value="{{ tags }}" placeholder="python, flask, web" class="h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">
+                </label>
+            </div>
+            <label class="block">
+                <span class="mb-1.5 block text-xs font-semibold text-stone-600">Текст статьи</span>
+                <textarea name="body" required class="min-h-80 w-full resize-y rounded-xl border border-stone-200 bg-stone-50 p-3 leading-7 outline-none focus:bg-white focus:ring-2 focus:ring-stone-200">{{ post.body if post else '' }}</textarea>
+            </label>
+            <div class="flex justify-end">
+                <button class="rounded-xl bg-stone-900 px-5 py-3 font-medium text-white hover:bg-stone-700">{{ 'Сохранить изменения' if post else 'Опубликовать' }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

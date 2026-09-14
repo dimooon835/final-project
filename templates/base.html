@@ -1,22 +1,57 @@
-<!doctype html>
-<html lang="ru"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{% block title %}BlogSpace{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
-</head><body>
-<header><div class="nav wrap">
-<a class="logo" href="{{ url_for('index') }}">BlogSpace</a>
-<nav>
-<a href="{{ url_for('index') }}">Главная</a>
-{% if current_user %}
-<a href="{{ url_for('new_post') }}">+ Новый пост</a>
-{% if current_user.role == 'admin' %}<a href="{{ url_for('admin') }}">Админка</a>{% endif %}
-<span class="user">👤 {{ current_user.username }}</span><a href="{{ url_for('logout') }}">Выйти</a>
-{% else %}<a href="{{ url_for('login') }}">Войти</a><a href="{{ url_for('register') }}">Регистрация</a>{% endif %}
-</nav></div></header>
-<main class="wrap">
-{% with messages=get_flashed_messages(with_categories=true) %}{% for cat,msg in messages %}<div class="flash {{cat}}">{{msg}}</div>{% endfor %}{% endwith %}
-{% block content %}{% endblock %}
-</main>
-<footer><div class="wrap">BlogSpace · учебная блог-платформа</div></footer>
-</body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BlogSpace{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-ink: #1d1d1d;
+            --color-muted: #6f709c;
+            --color-panel: #fafaf8;
+            --shadow-soft: 0 12px 36px rgba(24, 24, 22, 0.06);
+        }
+    </style>
+</head>
+<body class="min-w-[320px] bg-[#f4f4f1] text-sm text-ink">
+<div class="min-h-screen">
+    <header class="border-b border-stone-200 bg-white">
+        <div class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+            <a href="{{ url_for('index') }}" class="text-lg font-semibold tracking-tight">blogspace</a>
+            <nav class="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
+                <a href="{{ url_for('index') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Главная</a>
+                {% if current_user %}
+                    <a href="{{ url_for('new_post') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white hover:bg-stone-700">Новый пост</a>
+                    {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Админка</a>
+                    {% endif %}
+                    <span class="hidden px-2 text-stone-400 sm:inline">{{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Войти</a>
+                    <a href="{{ url_for('register') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="mb-4 rounded-xl border px-4 py-3 text-sm {% if category == 'error' %}border-red-200 bg-red-50 text-red-700{% else %}border-emerald-200 bg-emerald-50 text-emerald-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="border-t border-stone-200 bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-8 text-xs text-stone-400 sm:px-6">
+            BlogSpace · учебная блог-платформа
+        </div>
+    </footer>
+</div>
+</body>
+</html>

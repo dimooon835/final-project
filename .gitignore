@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environment
+# Virtual environments
 .venv/
 venv/
 env/
@@ -18,7 +18,7 @@ instance/
 *.sqlite
 *.sqlite3
 
-# Environment / secrets
+# Secrets
 .env
 .env.*
 !.env.example
@@ -36,13 +36,13 @@ Thumbs.db
 # Logs
 *.log
 
-# Testing / coverage
+# Tests / coverage
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
 
-# Build / packaging
+# Build
 build/
 dist/
 *.egg-info/
