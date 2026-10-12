@@ -1,48 +1,10 @@
-# BlogSpace
-
-Учебная блог-платформа на Python + Flask + SQLite.
-
-## Реализовано
-
-- регистрация и авторизация;
-- хеширование паролей;
-- лента с пагинацией;
-- поиск по статьям;
-- фильтрация по категориям и тегам;
-- создание, редактирование и удаление своих постов;
-- комментарии;
-- лайки;
-- админ-панель;
-- бан/разбан пользователей;
-- удаление постов и комментариев;
-- управление категориями и тегами;
-- статистика.
-
-## Интерфейс
-
-Все HTML-шаблоны находятся в `templates/` и оформлены в стиле предоставленного примера: полноценная HTML-структура, Tailwind CSS через CDN, светлая минималистичная панель.
+# Blog Platform
 
 ## Запуск
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-```
-Открыть `http://127.0.0.1:5000`.
-
-## Администратор
-
-Логин: `admin`  
-Пароль: `admin123`
-
-## Git
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-SQLite-база, `.env`, виртуальное окружение и служебные файлы уже исключены через `.gitignore`.
+1. `python -m venv .venv`
+2. Windows: `.venv\Scripts\activate`
+3. `pip install -r requirements.txt`
+4. Скопировать `.env.example` в `.env`.
+5. Задать `SECRET_KEY` и `ADMIN_PASSWORD`.
+6. `python app.py`
+7. `http://127.0.0.1:5000`
