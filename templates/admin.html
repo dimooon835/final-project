@@ -27,9 +27,11 @@
                     <td>
                     {% if u.role != 'admin' %}
                         {% if u.banned %}
-                        <form method="post" action="{{ url_for('unban_user', user_id=u.id) }}"><button class="rounded-lg bg-stone-100 px-3 py-1.5">Разбан</button></form>
+                        <form method="post" action="{{ url_for('admin.unban_user', user_id=u.id) }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="rounded-lg bg-stone-100 px-3 py-1.5">Разбан</button></form>
                         {% else %}
-                        <form method="post" action="{{ url_for('ban_user', user_id=u.id) }}"><button class="rounded-lg bg-red-50 px-3 py-1.5 text-red-600">Бан</button></form>
+                        <form method="post" action="{{ url_for('admin.ban_user', user_id=u.id) }}" onsubmit="return confirm('Заблокировать пользователя?')">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="rounded-lg bg-red-50 px-3 py-1.5 text-red-600">Бан</button></form>
                         {% endif %}
                     {% endif %}
                     </td>
@@ -41,7 +43,8 @@
 
         <section class="rounded-2xl border border-stone-200 bg-white p-5">
             <h2 class="text-lg font-semibold">Категории и теги</h2>
-            <form class="mt-4 flex gap-2" method="post" action="{{ url_for('add_category') }}">
+            <form class="mt-4 flex gap-2" method="post" action="{{ url_for('admin.add_category') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
                 <input name="name" required placeholder="Новая категория" class="h-10 min-w-0 flex-1 rounded-lg bg-stone-100 px-3 outline-none">
                 <button class="rounded-lg bg-stone-900 px-4 text-white">Добавить</button>
             </form>
@@ -49,14 +52,16 @@
                 {% for c in categories %}
                 <div class="flex items-center justify-between border-b border-stone-100 py-2">
                     <span>{{ c.name }}</span>
-                    <form method="post" action="{{ url_for('delete_category', category_id=c.id) }}"><button class="text-red-500">Удалить</button></form>
+                    <form method="post" action="{{ url_for('admin.delete_category', category_id=c.id) }}" onsubmit="return confirm('Удалить категорию? Посты останутся без категории.')">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="text-red-500">Удалить</button></form>
                 </div>
                 {% endfor %}
             </div>
             <h3 class="mt-7 font-semibold">Теги</h3>
             <div class="mt-2 flex flex-wrap gap-2">
                 {% for t in tags %}
-                <form method="post" action="{{ url_for('delete_tag', tag_id=t.id) }}">
+                <form method="post" action="{{ url_for('admin.delete_tag', tag_id=t.id) }}" onsubmit="return confirm('Удалить тег?')">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
                     <button class="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-600 hover:bg-red-50 hover:text-red-600">#{{ t.name }} ×</button>
                 </form>
                 {% endfor %}
@@ -71,9 +76,10 @@
             <tbody>
             {% for p in posts %}
             <tr class="border-b border-stone-100">
-                <td class="py-3"><a class="font-medium text-stone-900" href="{{ url_for('post', post_id=p.id) }}">{{ p.title }}</a></td>
+                <td class="py-3"><a class="font-medium text-stone-900" href="{{ url_for('posts.post', post_id=p.id) }}">{{ p.title }}</a></td>
                 <td>{{ p.username }}</td>
-                <td><form method="post" action="{{ url_for('admin_delete_post', post_id=p.id) }}" onsubmit="return confirm('Удалить пост?')"><button class="text-red-500">Удалить</button></form></td>
+                <td><form method="post" action="{{ url_for('admin.admin_delete_post', post_id=p.id) }}" onsubmit="return confirm('Удалить пост?')">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="text-red-500">Удалить</button></form></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -88,7 +94,8 @@
             {% for c in comments %}
             <tr class="border-b border-stone-100">
                 <td class="py-3">{{ c.username }}</td><td>{{ c.title }}</td><td class="max-w-sm">{{ c.body[:100] }}</td>
-                <td><form method="post" action="{{ url_for('admin_delete_comment', comment_id=c.id) }}"><button class="text-red-500">Удалить</button></form></td>
+                <td><form method="post" action="{{ url_for('admin.admin_delete_comment', comment_id=c.id) }}" onsubmit="return confirm('Удалить комментарий?')">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="text-red-500">Удалить</button></form></td>
             </tr>
             {% endfor %}
             </tbody>

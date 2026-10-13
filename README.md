@@ -1,10 +1,79 @@
-# Blog Platform
+# BlogSpace
+
+Учебная блог-платформа на Python + Flask + SQLite.
+
+## Реализовано
+
+- регистрация и авторизация;
+- хеширование паролей;
+- лента с пагинацией;
+- поиск по статьям;
+- фильтрация по категориям и тегам;
+- создание, редактирование и удаление своих постов;
+- комментарии;
+- лайки;
+- админ-панель;
+- бан/разбан пользователей;
+- удаление постов и комментариев;
+- управление категориями и тегами;
+- статистика.
+
+## Интерфейс
+
+Все HTML-шаблоны находятся в `templates/` и оформлены в стиле предоставленного примера: полноценная HTML-структура, Tailwind CSS через CDN, светлая минималистичная панель.
+
+## Структура проекта
+
+- `app.py` — точка входа.
+- `blogspace/__init__.py` — фабрика приложения, регистрация Blueprint, CSRF и обработчики ошибок.
+- `blogspace/auth.py` — регистрация, вход/выход и проверки доступа.
+- `blogspace/posts.py` — лента, посты, комментарии и лайки.
+- `blogspace/admin.py` — административные маршруты.
+- `blogspace/db.py` — подключение SQLite, создание схемы и работа с тегами.
+- `templates/` — HTML-шаблоны.
+
+Все маршруты используют имена endpoints с префиксами blueprint: `auth.*`, `posts.*`, `admin.*`.
 
 ## Запуск
-1. `python -m venv .venv`
-2. Windows: `.venv\Scripts\activate`
-3. `pip install -r requirements.txt`
-4. Скопировать `.env.example` в `.env`.
-5. Задать `SECRET_KEY` и `ADMIN_PASSWORD`.
-6. `python app.py`
-7. `http://127.0.0.1:5000`
+
+Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+```
+
+Отредактируйте `.env`, затем запустите:
+
+```bash
+python app.py
+```
+
+Linux/macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+Откройте `http://127.0.0.1:5000`.
+
+## Администратор и безопасность
+
+Скопируйте `.env.example` в `.env`, затем задайте случайный `SECRET_KEY` длиной не менее 32 символов и сильный `ADMIN_PASSWORD`. При первом запуске администратор создаётся только если задан `ADMIN_PASSWORD`; логин — `admin`. Если администратор уже есть в базе, переменная окружения не меняет его пароль. Для production включите HTTPS и установите `COOKIE_SECURE=1`.
+
+Добавлены CSRF-токены для POST-запросов, безопасная проверка `next`, выход через POST, валидация ввода, страницы ошибок и ограничение попыток входа в пределах процесса. Для нескольких workers ограничение попыток следует вынести в Redis или другое общее хранилище.
+
+## Git
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+SQLite-база, `.env`, виртуальное окружение и служебные файлы уже исключены через `.gitignore`.

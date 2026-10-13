@@ -18,19 +18,22 @@
 <div class="min-h-screen">
     <header class="border-b border-stone-200 bg-white">
         <div class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-            <a href="{{ url_for('index') }}" class="text-lg font-semibold tracking-tight">blogspace</a>
+            <a href="{{ url_for('posts.index') }}" class="text-lg font-semibold tracking-tight">blogspace</a>
             <nav class="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
-                <a href="{{ url_for('index') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Главная</a>
+                <a href="{{ url_for('posts.index') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Главная</a>
                 {% if current_user %}
-                    <a href="{{ url_for('new_post') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white hover:bg-stone-700">Новый пост</a>
+                    <a href="{{ url_for('posts.new_post') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white hover:bg-stone-700">Новый пост</a>
                     {% if current_user.role == 'admin' %}
-                        <a href="{{ url_for('admin') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Админка</a>
+                        <a href="{{ url_for('admin.admin') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Админка</a>
                     {% endif %}
                     <span class="hidden px-2 text-stone-400 sm:inline">{{ current_user.username }}</span>
-                    <a href="{{ url_for('logout') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Выйти</a>
+                    <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                        <button class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Выйти</button>
+                    </form>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Войти</a>
-                    <a href="{{ url_for('register') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white">Регистрация</a>
+                    <a href="{{ url_for('auth.login') }}" class="rounded-lg px-3 py-2 text-stone-600 hover:bg-stone-100">Войти</a>
+                    <a href="{{ url_for('auth.register') }}" class="rounded-lg bg-stone-900 px-3 py-2 font-medium text-white">Регистрация</a>
                 {% endif %}
             </nav>
         </div>

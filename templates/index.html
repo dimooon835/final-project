@@ -22,19 +22,27 @@
         <button class="h-10 rounded-lg bg-stone-900 px-5 font-medium text-white hover:bg-stone-700">Найти</button>
     </div>
     {% if q or tag or cat %}
-        <a href="{{ url_for('index') }}" class="mt-2 inline-block text-xs text-stone-500">Сбросить фильтры</a>
+        <a href="{{ url_for('posts.index') }}" class="mt-2 inline-block text-xs text-stone-500">Сбросить фильтры</a>
     {% endif %}
 </form>
 
 <div class="space-y-3">
 {% for p in posts %}
 <article class="rounded-2xl border border-stone-200 bg-white p-5 shadow-[0_12px_36px_rgba(24,24,22,0.04)] transition hover:-translate-y-0.5 sm:p-6">
-    <div class="text-xs text-stone-400">{{ p.category or 'Без категории' }} · {{ p.created_at[:16] }} · {{ p.username }}</div>
+    <div class="text-xs text-stone-400">{{ p.category or 'Без категории' }} · {{ p.created_at[:16] }} ·
+        <a class="text-stone-600 hover:underline" href="{{ url_for('posts.index', author=p.user_id) }}">{{ p.username }}</a></div>
     <h2 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
-        <a href="{{ url_for('post', post_id=p.id) }}" class="hover:text-stone-500">{{ p.title }}</a>
+        <a href="{{ url_for('posts.post', post_id=p.id) }}" class="hover:text-stone-500">{{ p.title }}</a>
     </h2>
-    <p class="mt-2 leading-7 text-stone-600">{{ p.body[:280] }}{{ '…' if p.body|length > 280 else '' }}</p>
-    <div class="mt-4 text-xs text-stone-400">❤️ {{ p.likes }} · 💬 {{ p.comments }}</div>
+    <p class="mt-2 leading-7 text-stone-600">{{ p.body|striptags|truncate(280, True, '…')|replace('\n', ' ') }}</p>
+    <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-stone-400">
+        {% if current_user %}
+        <form method="post" action="{{ url_for('posts.like', post_id=p.id) }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="rounded-lg bg-stone-100 px-3 py-1.5 text-stone-700">❤️ {{ p.likes }} · Нравится</button></form>
+        {% else %}<a class="rounded-lg bg-stone-100 px-3 py-1.5 text-stone-700" href="{{ url_for('auth.login', next=url_for('posts.post', post_id=p.id)) }}">❤️ {{ p.likes }} · Войдите, чтобы лайкнуть</a>{% endif %}
+        <span>💬 {{ p.comments }}</span>
+        {% for t in p.tag_names or [] %}<a href="{{ url_for('posts.index', tag=t) }}" class="rounded-full bg-stone-100 px-2 py-1">#{{ t }}</a>{% endfor %}
+    </div>
 </article>
 {% else %}
 <div class="rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
@@ -46,11 +54,11 @@
 
 <div class="flex items-center justify-center gap-6 py-8">
     {% if page > 1 %}
-        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page-1}}">← Назад</a>
+        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="{{ url_for('posts.index', q=q, tag=tag, category=cat, page=page-1, author=author) }}">← Назад</a>
     {% endif %}
     <span class="text-stone-500">Страница {{ page }} из {{ pages }}</span>
     {% if page < pages %}
-        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="?q={{q}}&tag={{tag}}&category={{cat}}&page={{page+1}}">Вперёд →</a>
+        <a class="rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-stone-200" href="{{ url_for('posts.index', q=q, tag=tag, category=cat, page=page+1, author=author) }}">Вперёд →</a>
     {% endif %}
 </div>
 {% endblock %}
