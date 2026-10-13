@@ -10,7 +10,8 @@ from .admin import admin_bp
 
 def create_app():
     load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
-    app = Flask(__name__)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    app = Flask(__name__, template_folder=os.path.join(project_root, "templates"))
     secret_key = os.environ.get("SECRET_KEY")
     if not secret_key or len(secret_key) < 32:
         raise RuntimeError("Задайте SECRET_KEY длиной не менее 32 символов в .env или окружении.")
